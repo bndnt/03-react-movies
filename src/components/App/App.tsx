@@ -7,20 +7,33 @@ import axios from "axios";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import toast, { Toaster } from "react-hot-toast";
+import MovieModal from "../MovieModal/MovieModal";
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
   const handleSearch = async (query: string) => {
     try {
       setLoading(true);
       setError(null);
       setMovies([]);
       const data = await fetchMovies(query);
-      setMovies(data);
-      setHasSearched(true);
+      // Сортировка по рейтингу: от высоких к низким
+      const sortedByRating = data.sort((a, b) => {
+        // Если рейтинг отсутствует, считаем как 0
+        const ratingA = a.vote_average || 0;
+        const ratingB = b.vote_average || 0;
+        return ratingB - ratingA; // от высокого к низкому
+      });
+
+      setMovies(sortedByRating);
+
+      if (sortedByRating.length === 0) {
+        toast.error("No movies found for your request.");
+      }
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.status_message || err.message);
@@ -33,15 +46,25 @@ function App() {
       setLoading(false);
     }
   };
+  // открытие модалки с конкретным фильмом
+  const openModal = (movie: Movie) => {
+    setCurrentMovie(movie);
+  };
+
+  // закрытие модалки
+  const closeModal = () => {
+    setCurrentMovie(null);
+  };
   return (
     <div>
+      <Toaster position="top-center" reverseOrder={false} />
       <SearchBar onSubmit={handleSearch} />
       {loading && <Loader />}
-      {movies.length > 0 && <MovieGrid items={movies} />}
-      {hasSearched && movies.length === 0 && !loading && !error && (
-        <p>No movies found for your request.</p>
+      {movies.length > 0 && (
+        <MovieGrid items={movies} onSelect={(movie) => openModal(movie)} />
       )}
       {error && <ErrorMessage error={error} />}
+      {currentMovie && <MovieModal movie={currentMovie} onClose={closeModal} />}
     </div>
   );
 }

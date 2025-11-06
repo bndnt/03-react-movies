@@ -30,6 +30,13 @@
   object-position: center;
   display: block;
 }
+.moviesListItemNoImg {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
 
 .title {
   position: absolute;
