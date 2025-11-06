@@ -3,15 +3,15 @@ import css from "./MovieGrid.module.css";
 import type { Movie } from "../../types/movie";
 import Clapperboard from "../../../public/clapperboard.png";
 
-interface MoviesGridProps {
-  items: Movie[];
+interface MovieGridProps {
+  movies: Movie[];
   onSelect: (movie: Movie) => void;
 }
-const MovieGrid = ({ items, onSelect }: MoviesGridProps) => {
+const MovieGrid = ({ movies, onSelect }: MovieGridProps) => {
   return (
     <div>
       <ul className={css.grid}>
-        {items.map((item) => (
+        {movies.map((item) => (
           <li key={item.id} onClick={() => onSelect(item)}>
             <div className={css.card}>
               <span className={css.moviesListItemImgCover}>
