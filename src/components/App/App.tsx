@@ -2,7 +2,7 @@ import css from "./App.module.css";
 import SearchBar from "../SearchBar/SearchBar";
 import { fetchMovies } from "../../services/movieService";
 import type { Movie } from "../../types/movie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
@@ -46,12 +46,10 @@ function App() {
       setLoading(false);
     }
   };
-  // открытие модалки с конкретным фильмом
   const openModal = (movie: Movie) => {
     setCurrentMovie(movie);
   };
 
-  // закрытие модалки
   const closeModal = () => {
     setCurrentMovie(null);
   };

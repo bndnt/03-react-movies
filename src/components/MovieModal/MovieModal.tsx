@@ -1,5 +1,4 @@
 import { createPortal } from "react-dom";
-import ReactDOM from "react-dom";
 import css from "./MovieModal.module.css";
 import type { Movie } from "../../types/movie";
 import { useEffect } from "react";
@@ -29,7 +28,7 @@ const MovieModal = ({ movie, onClose }: MovieModalProps) => {
       onClose();
     }
   };
-  return ReactDOM.createPortal(
+  return createPortal(
     <div>
       <div
         onClick={handleBackdrop}
